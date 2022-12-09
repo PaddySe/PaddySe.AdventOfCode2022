@@ -1,39 +1,26 @@
-﻿// "A", "X" == Rock
-// "B", "Y" == Paper
-// "C", "Z" = Scissors
-// Loss == 0, Draw == 3, Win == 6
-// Rock == 1, Paper == 2, Scissors = 3
+﻿using PaddySe.AdventOfCode2022.Day2;
 
-var lines = new List<(char, char)>
-{
-	('A', 'Y'),
-	('B', 'X'),
-	('C', 'Z')
-};
+//var lines = new List<(char, char)>
+//{
+//	('A', 'Y'),
+//	('B', 'X'),
+//	('C', 'Z')
+//};
 
-var score = 0;
+var lines = File.ReadAllLines("Input.txt")
+				.Select(line => (line[0], line[2]))
+				.ToList();
 
-foreach (var line in lines)
-{
-	bool? win = false; // false == loss, true == win, null == tie
+var score = (from line in lines
+			 let them = Move.Create(line.Item1)
+			 let me = Move.Create(line.Item2)
+			 select them.GetScore(me)).Sum();
 
-	if (line.Item2 == 'X')
-	{
-		switch (line.Item1)
-		{
-			case 'A': break;
-			case 'B': break;
-			case 'C': break;
-		}
-	}
-	else if (line.Item2 == 'Y')
-	{
-		
-	}
-	else if (line.Item2 == 'Z')
-	{
-		
-	}
-}
+Console.WriteLine($"[PART 1] Result: {score}");
 
-Console.WriteLine($"Result: {score}");
+
+score = (from line in lines
+		 let them = Move.Create(line.Item1)
+		 select them.ScoreFor(line.Item2)).Sum();
+
+Console.WriteLine($"[PART 2] Result: {score}");
