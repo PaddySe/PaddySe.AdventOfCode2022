@@ -22,14 +22,32 @@ Console.WriteLine($"[PART 2] Marker found at position {FindMarker(input, 14)}");
 
 static int FindMarker(string input, int markerLength)
 {
-	for (var i = 0; i < input.Length - markerLength - 1; i++)
+	using var reader = new StringReader(input);
+	int latest;
+	var buffer = new List<char>();
+
+	var position = 0;
+
+	while ((latest = reader.Read()) != -1)
 	{
-		var part = input.Skip(i).Take(markerLength).ToList();
-		if (part.All(c => part.Count(c2 => c2 == c) == 1))
+		position++;
+
+		buffer.Add((char)latest);
+
+		if (buffer.Count < markerLength)
 		{
-			return i + markerLength;
+			// We don't have enough data in the buffer for a whole marker yet.
+			continue;
 		}
+
+		if (buffer.All(c => buffer.Count(c2 => c2 == c) == 1))
+		{
+			return position;
+		}
+
+		buffer.RemoveAt(0);
 	}
 
+	// Fallback, no marker found.
 	return -1;
 }
